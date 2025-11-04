@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatSalaModern", "ChatSalaModern.csproj", "{92347449-34B3-31BD-F831-EEAE4B8AC607}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92347449-34B3-31BD-F831-EEAE4B8AC607}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92347449-34B3-31BD-F831-EEAE4B8AC607}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92347449-34B3-31BD-F831-EEAE4B8AC607}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92347449-34B3-31BD-F831-EEAE4B8AC607}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {65B731CA-CA1F-4F6B-8D74-F7F4892C0AAD}
+	EndGlobalSection
+EndGlobal

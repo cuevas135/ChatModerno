@@ -1,0 +1,28 @@
+# Archivos de compilación
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Archivos de VSCode / Rider
+.vscode/
+.idea/
+
+# Publicaciones
+*.publishsettings
+*.pubxml
+*.publishproj
+
+# Archivos temporales
+*.tmp
+*.log
+*.cache
+*.zip
+*.rar
+*.7z
+
+# Configuración sensible
+appsettings.*.json
+!appsettings.Development.json
