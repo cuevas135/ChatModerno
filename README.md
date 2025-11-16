@@ -22,16 +22,17 @@ Permite crear salas dinámicas, mostrar historial, ver usuarios escribiendo (“
 
 ChatModerno/
 ├── Hubs/
-│ └── ChatHub.cs
+│   └── ChatHub.cs
 ├── Models/
-│ └── ChatMessage.cs
+│   └── ChatMessage.cs
 ├── Services/
-│ └── ChatRoomStore.cs
+│   └── ChatRoomStore.cs
 ├── wwwroot/
-│ └── index.html
+│   └── index.html
 ├── Program.cs
 ├── ChatModerno.csproj
 └── README.md
+
 
 ## 🧠 Cómo funciona
 
