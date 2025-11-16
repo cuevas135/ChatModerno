@@ -1,0 +1,7 @@
+Tip extra: actualizar cambios
+Cada vez que modifiques algo:
+
+git add .
+git commit -m "Descripción del cambio"
+git push
+
