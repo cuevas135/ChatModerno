@@ -21,3 +21,32 @@ Permite crear salas dinámicas, mostrar historial, ver usuarios escribiendo (“
 
 ## 🧩 Estructura del proyecto
 
+ChatModerno/
+├── Hubs/
+│ └── ChatHub.cs
+├── Models/
+│ └── ChatMessage.cs
+├── Services/
+│ └── ChatRoomStore.cs
+├── wwwroot/
+│ └── index.html
+├── Program.cs
+├── ChatModerno.csproj
+└── README.md
+
+## 🧠 Cómo funciona
+
+Program.cs configura SignalR, CORS y los archivos estáticos.
+ChatHub.cs define los métodos que envían y reciben mensajes entre usuarios.
+ChatRoomStore.cs guarda los mensajes recientes de cada sala (en memoria).
+index.html se conecta al Hub, muestra mensajes y detecta escritura en tiempo real.
+
+## 🧰 Tecnologías utilizadas
+
+Tipo	Tecnología
+Backend	ASP.NET Core 9.0
+Comunicación	SignalR
+Lenguaje	C# 12
+Frontend	HTML5, CSS3, JavaScript ES6
+Librerías CDN	@microsoft/signalr
+Hosting local	Kestrel
