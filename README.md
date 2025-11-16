@@ -19,7 +19,8 @@ Permite crear salas dinámicas, mostrar historial, ver usuarios escribiendo (“
 
 ## 🧩 Estructura del proyecto
 
-```ChatModerno/
+```
+ChatModerno/
 ├── Hubs/
 │   └── ChatHub.cs
 ├── Models/
@@ -31,7 +32,7 @@ Permite crear salas dinámicas, mostrar historial, ver usuarios escribiendo (“
 ├── Program.cs
 ├── ChatModerno.csproj
 └── README.md
-
+```
 
 ## 🧠 Cómo funciona
 
