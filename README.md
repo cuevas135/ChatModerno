@@ -42,10 +42,11 @@ ChatModerno/
 
 ## 🧰 Tecnologías utilizadas
 
-- Tipo	Tecnología
-- Backend	ASP.NET Core 9.0
-- Comunicación	SignalR
-- Lenguaje	C# 12
-- Frontend	HTML5, CSS3, JavaScript ES6
-- Librerías CDN	@microsoft/signalr
-- Hosting local	Kestrel
+| Tipo          | Tecnología                  |
+| ------------- | --------------------------- |
+| Backend       | ASP.NET Core 9.0            |
+| Comunicación  | SignalR                     |
+| Lenguaje      | C# 12                       |
+| Frontend      | HTML5, CSS3, JavaScript ES6 |
+| Librerías CDN | @microsoft/signalr          |
+| Hosting local | Kestrel                     |
