@@ -3,7 +3,6 @@
 **ChatModerno** es una aplicación de chat en tiempo real construida con **.NET 9**, **C# moderno** y **SignalR**.  
 Permite crear salas dinámicas, mostrar historial, ver usuarios escribiendo (“typing indicator”) y manejar mensajes en vivo con una interfaz simple en HTML + JavaScript.
 
----
 
 ## 🚀 Características
 
