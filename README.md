@@ -30,7 +30,7 @@ Permite crear salas dinámicas, mostrar historial, ver usuarios escribiendo (“
 │   └── index.html
 ├── Program.cs
 ├── ChatModerno.csproj
-└── README.md```
+└── README.md
 
 
 ## 🧠 Cómo funciona
