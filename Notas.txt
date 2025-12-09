@@ -8,7 +8,8 @@ git push
 
 
 Ejecuta la aplicación:
-===============================================
 dotnet run
-===============================================
+
+Abre la navegador
+http://localhost:5276
 
