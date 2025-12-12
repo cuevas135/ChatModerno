@@ -28,7 +28,16 @@ ChatModerno/
 ├── Services/
 │   └── ChatRoomStore.cs
 ├── wwwroot/
-│   └── index.html
+│   ├── index.html
+│   ├── css/
+│   │   └── styles.css
+│   └── js/
+│       ├── utils.js
+│       ├── ui.js
+│       ├── theme.js
+│       └── signalr.js
+|       └── state.js
+|       └── config.js
 ├── Program.cs
 ├── ChatModerno.csproj
 └── README.md

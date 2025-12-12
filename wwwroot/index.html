@@ -1,145 +1,114 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Chat .NET 9 + SignalR</title>
-  <style>
-    :root { font-family: ui-sans-serif, system-ui; }
-    body { max-width: 880px; margin: 24px auto; padding: 0 12px; }
-    .row { display: flex; gap: 8px; margin: 10px 0; }
-    input, button, select { padding: 10px; font-size: 14px; }
-    #log { border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px; height: 420px; overflow-y: auto; background:#fafafa }
-    .msg { margin: 6px 0; }
-    .sys { color:#6b7280; font-size: 12px; }
-    .time { color:#6b7280; font-size: 12px; margin-left: 6px; }
-    .typing { color:#6b7280; font-size: 12px; height: 18px; margin-top: 6px }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chat Moderno</title>
+
+  <!-- Fuente e iconos (Material Icons para los botones) -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <link href="css/styles.css" rel="stylesheet" />
 </head>
+
 <body>
-  <h1>💬 Chat en tiempo real (.NET 9 + SignalR)</h1>
+  <div class="app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div>
+          <div class="title">Chat Moderno</div>
+          <small>.NET 9 + SignalR</small>
+        </div>
+        <span class="material-icons" style="font-size:18px;opacity:0.8;">chat</span>
+      </div>
 
-  <div class="row">
-    <input id="user" placeholder="Tu nombre" />
-    <input id="room" placeholder="Sala (ej. general)" />
-    <button id="join">Unirme</button>
-    <button id="leave" disabled>Salir</button>
+      <div class="sidebar-section">Tu sesión</div>
+      <div class="sidebar-controls">
+        <input id="user" placeholder="Tu nombre (ej. Astronauta)" />
+        <input id="room" placeholder="Sala (ej. general)" />
+        <div class="sidebar-controls-row">
+          <button id="join" class="btn-join">Unirme</button>
+          <button id="leave" class="btn-leave" disabled>Salir</button>
+        </div>
+      </div>
+
+      <div class="sidebar-section">Ejemplos de salas</div>
+      <div class="room-pill"># general</div>
+      <div class="room-pill"># soporte</div>
+      <div class="room-pill"># random</div>
+
+      <div class="sidebar-footer">
+        <div>💡 Tip: abre dos pestañas y entra a la misma sala para probar el chat en tiempo real.</div>
+      </div>
+    </aside>
+
+    <!-- CHAT MAIN -->
+    <section class="chat">
+      <header class="chat-header">
+        <button class="theme-toggle" id="themeToggle" title="Cambiar tema">
+          <span class="material-icons" id="themeIcon">dark_mode</span>
+          <span id="themeText">Oscuro</span>
+        </button>
+
+        <div class="info">
+          <span class="room-name" id="roomLabel">Ninguna sala</span>
+          <span class="status" id="statusLabel">Conéctate a una sala para empezar</span>
+        </div>
+        <div class="badge">SignalR en tiempo real</div>
+      </header>
+
+      <main class="messages" id="log" aria-live="polite"></main>
+      <div class="typing-indicator" id="typing"></div>
+
+      <footer class="chat-input">
+        <!-- Botón emoji + panel -->
+        <div style="position:relative;">
+          <button class="icon-btn" id="emojiBtn" title="Emojis">
+            <span class="material-icons">emoji_emotions</span>
+          </button>
+          <div class="emoji-panel" id="emojiPanel">
+            <span>😀</span><span>😃</span><span>😄</span><span>😁</span><span>😆</span><span>😅</span><span>😂</span>
+            <span>🤣</span><span>😊</span><span>😇</span><span>🙂</span><span>🙃</span><span>😉</span><span>😌</span>
+            <span>😍</span><span>😘</span><span>😗</span><span>😙</span><span>😚</span><span>🤗</span><span>🤩</span>
+            <span>🤔</span><span>🤨</span><span>😎</span><span>🤓</span><span>🥳</span><span>😴</span><span>🤯</span>
+            <span>❤</span><span>🔥</span><span>👍</span><span>👏</span><span>✨</span><span>🌟</span>
+          </div>
+        </div>
+
+        <!-- Stickers rápidos (iconos como mensajes) -->
+        <div class="stickers">
+          <button class="sticker-btn" data-sticker="👍">👍</button>
+          <button class="sticker-btn" data-sticker="😂">😂</button>
+          <button class="sticker-btn" data-sticker="❤️">❤️</button>
+          <button class="sticker-btn" data-sticker="🔥">🔥</button>
+        </div>
+
+        <!-- Input mensaje -->
+        <div class="msg-input-wrapper">
+          <input id="message" placeholder="Escribe un mensaje..." disabled />
+        </div>
+
+        <!-- Botón enviar -->
+        <button class="icon-btn send-btn" id="send" disabled title="Enviar">
+          <span class="material-icons">send</span>
+        </button>
+      </footer>
+    </section>
   </div>
 
-  <div id="log" aria-live="polite"></div>
-  <div class="typing" id="typing"></div>
+  <!-- Cliente SignalR -->
+<script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@latest/dist/browser/signalr.min.js"></script>
 
-  <div class="row">
-    <input id="message" placeholder="Escribe un mensaje..." disabled />
-    <button id="send" disabled>Enviar</button>
-  </div>
+<script src="js/config.js"></script>
+<script src="js/state.js"></script>
 
-  <!-- Cliente SignalR moderno desde CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@latest/dist/browser/signalr.min.js"></script>
-  <script>
-    const log = document.getElementById('log');
-    const typing = document.getElementById('typing');
-    const $ = (id) => document.getElementById(id);
-    const userEl = $('user'), roomEl = $('room'), msgEl = $('message');
-    const btnJoin = $('join'), btnLeave = $('leave'), btnSend = $('send');
+<script src="js/utils.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/signalr.js"></script>
 
-    const fmtTime = iso => {
-      try { return new Date(iso).toLocaleTimeString(); } catch { return ''; }
-    };
-
-    const safe = s => s.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
-
-    const addMsg = (user, text, atUtc) => {
-      const at = atUtc ? fmtTime(atUtc) : '';
-      const div = document.createElement('div');
-      div.className = 'msg';
-      div.innerHTML = `<strong>${safe(user)}</strong>: ${safe(text)} <span class="time">${at}</span>`;
-      log.appendChild(div);
-      log.scrollTop = log.scrollHeight;
-    };
-
-    const addSys = text => {
-      const div = document.createElement('div');
-      div.className = 'sys';
-      div.textContent = `⚙ ${text}`;
-      log.appendChild(div);
-      log.scrollTop = log.scrollHeight;
-    };
-
-    const connection = new signalR.HubConnectionBuilder()
-      .withUrl("/chat")
-      .withAutomaticReconnect()
-      .build();
-
-    connection.on("ReceiveSystem", text => addSys(text));
-
-    connection.on("ReceiveMessage", msg => {
-      // msg: { user, text, at }
-      addMsg(msg.user, msg.text, msg.at);
-    });
-
-    connection.on("ReceiveHistory", list => {
-      addSys(`Cargando ${list.length} mensajes previos...`);
-      list.forEach(m => addMsg(m.user, m.text, m.at));
-    });
-
-    let typingTimer = null;
-    connection.on("UserTyping", (user) => {
-      typing.textContent = `${user} está escribiendo...`;
-      clearTimeout(typingTimer);
-      typingTimer = setTimeout(() => typing.textContent = '', 1200);
-    });
-
-    async function start() {
-      try { await connection.start(); }
-      catch {
-        setTimeout(start, 1000);
-      }
-    }
-    start();
-
-    btnJoin.addEventListener('click', async () => {
-      const user = userEl.value.trim() || "Anónimo";
-      const room = roomEl.value.trim() || "general";
-      await connection.invoke("JoinRoom", room, user);
-      msgEl.disabled = btnSend.disabled = btnLeave.disabled = false;
-      btnJoin.disabled = true;
-      userEl.disabled = roomEl.disabled = true;
-      msgEl.focus();
-    });
-
-    btnLeave.addEventListener('click', async () => {
-      const user = userEl.value.trim() || "Anónimo";
-      const room = roomEl.value.trim() || "general";
-      await connection.invoke("LeaveRoom", room, user);
-      msgEl.disabled = btnSend.disabled = btnLeave.disabled = true;
-      btnJoin.disabled = false;
-      userEl.disabled = roomEl.disabled = false;
-      typing.textContent = '';
-    });
-
-    btnSend.addEventListener('click', async () => {
-      const user = userEl.value.trim() || "Anónimo";
-      const room = roomEl.value.trim() || "general";
-      const message = msgEl.value.trim();
-      if (!message) return;
-      await connection.invoke("SendMessage", room, user, message);
-      msgEl.value = "";
-      msgEl.focus();
-    });
-
-    msgEl.addEventListener('input', () => {
-      const user = userEl.value.trim() || "Anónimo";
-      const room = roomEl.value.trim() || "general";
-      // notificar typing (sin await para no bloquear UI)
-      if (connection.state === "Connected") {
-        connection.invoke("Typing", room, user).catch(() => {});
-      }
-    });
-
-    msgEl.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !btnSend.disabled) btnSend.click();
-    });
-  </script>
 </body>
+
 </html>
