@@ -11,7 +11,16 @@ builder.Services.AddCors(o =>
 });
 
 
-builder.Services.AddSingleton<ChatRoomStore>();
+// ✅ Store PRO
+builder.Services.AddSingleton(_ => new ChatRoomStorePro(
+    maxPerRoom: 200,
+    roomTtl: TimeSpan.FromHours(12)
+));
+
+// ✅ Worker de limpieza
+builder.Services.AddHostedService<RoomCleanupWorker>();
+
+builder.Services.AddSingleton<ChatAbuseGuard>();
 
 var app = builder.Build();
 

@@ -1,9 +1,18 @@
+/* =========================================================
+   BASE GLOBAL
+   - Fuente por defecto del sistema
+   - Color de texto base (fallback)
+========================================================= */
 :root {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #111827;
 }
 
-/* MUY IMPORTANTE: que html y body midan toda la pantalla */
+/* =========================================================
+   RESET / FULL HEIGHT
+   MUY IMPORTANTE:
+   - html y body deben medir 100% para que el layout full-screen funcione
+========================================================= */
 html,
 body {
   margin: 0;
@@ -11,30 +20,42 @@ body {
   height: 100%;
 }
 
+/* =========================================================
+   BODY (contenedor global)
+   - Fondo oscuro base
+   - display:flex para soportar layout full-screen
+   - overflow:hidden evita scroll global (el scroll va en .messages)
+========================================================= */
 body {
   background: #0a1014;
   display: flex;
   height: 100vh;
-  overflow: hidden;
-  /* sin scroll global */
+  overflow: hidden; /* sin scroll global */
 }
 
-
-/* La app ahora ocupa TODO el ancho y TODO el alto */
+/* =========================================================
+   LAYOUT PRINCIPAL (.app)
+   - Ocupa todo el ancho y alto
+   - Grid con 2 columnas: sidebar + chat
+   - minmax(0, 1fr) evita que el contenido “empuje” y rompa el diseño
+========================================================= */
 .app {
   width: 100%;
   height: 100%;
   background: #f0f2f5;
   display: grid;
 
-  /* 🔥 REGLA QUE SOLUCIONA TODO */
+  /* Sidebar fijo (280px) + contenido flexible */
   grid-template-columns: 280px minmax(0, 1fr);
 
+  /* Permite que hijos con overflow funcionen correctamente en grid */
   min-height: 0;
 }
 
-
-/* Sidebar */
+/* =========================================================
+   SIDEBAR
+   - Columna izquierda estilo WhatsApp
+========================================================= */
 .sidebar {
   background: #202c33;
   color: #e9edef;
@@ -42,7 +63,10 @@ body {
   flex-direction: column;
 }
 
-/* Header */
+/* =========================================================
+   HEADER SIDEBAR
+   - Zona superior con título y botones (ej. toggle theme)
+========================================================= */
 .sidebar-header {
   padding: 12px 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -62,6 +86,9 @@ body {
   opacity: 0.8;
 }
 
+/* =========================================================
+   SECCIONES DE SIDEBAR (labels tipo "Tu sesión")
+========================================================= */
 .sidebar-section {
   padding: 10px 12px 6px;
   font-size: 11px;
@@ -70,6 +97,9 @@ body {
   opacity: 0.7;
 }
 
+/* =========================================================
+   CONTROLES DE SIDEBAR (inputs + botones join/leave)
+========================================================= */
 .sidebar-controls {
   padding: 0 12px 10px;
   display: flex;
@@ -77,13 +107,13 @@ body {
   gap: 8px;
 }
 
-/* 👇 estos son exactamente tus inputs de "Tu sesión" */
+/* Inputs de usuario y sala:
+   - width 100% para ocupar todo el espacio
+   - box-sizing para que padding no “rompa” el ancho */
 .sidebar-controls input {
   display: block;
   width: 100%;
-  /* ocupa TODO el ancho disponible */
   box-sizing: border-box;
-  /* incluye padding en el cálculo de ancho */
   padding: 8px 10px;
   border-radius: 6px;
   border: none;
@@ -96,6 +126,7 @@ body {
   color: #8696a0;
 }
 
+/* Fila de botones (Join / Leave) */
 .sidebar-controls-row {
   display: flex;
   gap: 8px;
@@ -103,7 +134,7 @@ body {
 }
 
 .sidebar-controls-row button {
-  flex: 1;
+  flex: 1; /* ambos botones mismo ancho */
   border-radius: 8px;
   border: none;
   padding: 8px 0;
@@ -112,6 +143,7 @@ body {
   font-weight: 500;
 }
 
+/* Botón Join */
 .btn-join {
   background: #00a884;
   color: white;
@@ -123,6 +155,7 @@ body {
   cursor: default;
 }
 
+/* Botón Leave */
 .btn-leave {
   background: #374045;
   color: #e4e6eb;
@@ -133,26 +166,30 @@ body {
   cursor: default;
 }
 
+/* Footer de sidebar (texto pequeño al final) */
 .sidebar-footer {
-  margin-top: auto;
+  margin-top: auto; /* empuja al final */
   padding: 10px 12px;
   font-size: 11px;
   opacity: 0.7;
 }
 
-/* Main Chat */
+/* =========================================================
+   MAIN CHAT (panel derecho)
+   - flex column para header + messages + input
+   - min-width/min-height 0 evitan roturas en grid
+========================================================= */
 .chat {
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 0;
-  /* 👈 IMPORTANTE */
-  min-width: 0;
-  /* 👈 sin esto, el contenido empuja y rompe el diseño */
+  min-height: 0; /* importante para overflow interno */
+  min-width: 0;  /* evita que contenido expanda el grid */
   background: #0a1014;
   color: #e9edef;
 }
 
+/* Header del chat: nombre sala y estado */
 .chat-header {
   padding: 10px 16px;
   background: #202c33;
@@ -178,22 +215,27 @@ body {
   color: #8696a0;
 }
 
-/* Lista de mensajes en modo compacto */
+/* =========================================================
+   LISTA DE MENSAJES
+   - scroll SOLO aquí
+   - gap/padding compactos
+   - scrollbar custom
+========================================================= */
 .messages {
   flex: 1;
   padding: 8px 16px 6px;
-  /* menos padding */
   overflow-y: auto;
+
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  /* menos espacio entre burbujas */
+  gap: 4px; /* espacio entre mensajes */
   min-height: 0;
 
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
+/* Scrollbar (Chrome/Edge) */
 .messages::-webkit-scrollbar {
   width: 6px;
 }
@@ -203,34 +245,36 @@ body {
   border-radius: 999px;
 }
 
-/* Burbujas compactas */
+/* =========================================================
+   BURBUJAS DE MENSAJE
+   - compactas, responsivas, con word-wrap
+========================================================= */
 .bubble {
   max-width: 78%;
-  /* un poquito más anchas */
   padding: 4px 8px;
-  /* menos padding */
   border-radius: 10px;
   font-size: 12px;
-  /* letra un poco más pequeña */
   line-height: 1.3;
   display: inline-block;
   word-wrap: break-word;
-  white-space: pre-wrap;
+  white-space: pre-wrap; /* respeta saltos de línea */
 }
 
+/* Burbuja de mis mensajes (derecha) */
 .bubble.me {
   align-self: flex-end;
   background: #005c4b;
   border-bottom-right-radius: 2px;
 }
 
+/* Burbuja de otros (izquierda) */
 .bubble.other {
   align-self: flex-start;
   background: #202c33;
   border-bottom-left-radius: 2px;
 }
 
-/* Nombre del usuario, en su línea */
+/* Nombre del usuario dentro de la burbuja */
 .bubble .user {
   display: block;
   font-weight: 600;
@@ -239,7 +283,7 @@ body {
   color: #b1b3b5;
 }
 
-/* Metadata (hora) compacta */
+/* Hora / metadata */
 .bubble .meta {
   display: flex;
   justify-content: flex-end;
@@ -249,7 +293,7 @@ body {
   margin-top: 2px;
 }
 
-/* Mensajes de sistema compactos */
+/* Mensajes de sistema (centrados y discretos) */
 .system-msg {
   align-self: center;
   font-size: 10px;
@@ -260,7 +304,7 @@ body {
   margin: 2px 0;
 }
 
-/* Indicador "está escribiendo..." más discreto */
+/* Indicador “está escribiendo…” */
 .typing-indicator {
   min-height: 16px;
   font-size: 10px;
@@ -268,24 +312,25 @@ body {
   padding: 0 16px 4px;
 }
 
+/* =========================================================
+   INPUT DEL CHAT
+   - barra inferior (emoji, stickers, input, enviar)
+========================================================= */
 .chat-input {
   padding: 8px 12px;
   background: #202c33;
   display: flex;
   align-items: center;
   gap: 8px;
-  /* separación entre elementos */
 }
 
-/* El wrapper del input ocupa la mayor parte, pero deja espacio al botón */
+/* Wrapper del input para que no “se coma” el botón enviar */
 .msg-input-wrapper {
   flex: 1;
-  /* antes lo teníamos muy grande (3) */
   margin-right: 8px;
-  /* deja aire antes del botón enviar */
 }
 
-/* Input ancho pero sin comerse el botón */
+/* Input principal */
 #message {
   width: 100%;
   padding: 9px 14px;
@@ -297,22 +342,25 @@ body {
   box-sizing: border-box;
 }
 
+/* Focus visible con aro verde */
 #message:focus {
   outline: none;
-  /* quita el blanco feo */
   box-shadow: 0 0 0 2px #00a884;
-  /* aro verde suave */
 }
 
-/* Emojis y botones laterales compactos */
+/* =========================================================
+   BOTONES ICONO (emoji / etc.)
+========================================================= */
 .icon-btn {
   background: transparent;
   border: none;
   color: #8696a0;
   cursor: pointer;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   padding: 4px;
   border-radius: 999px;
 }
@@ -321,7 +369,7 @@ body {
   font-size: 20px;
 }
 
-/* Stickers más pequeños para que no roben tanto espacio */
+/* Stickers compactos */
 .stickers {
   display: flex;
   gap: 3px;
@@ -341,29 +389,28 @@ body {
   background: #3b4a53;
 }
 
+/* Botón enviar estilo WhatsApp */
 .send-btn {
   background: #00a884;
-  /* verde WhatsApp */
   color: #ffffff;
   border: none;
+
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  /* redondo */
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   cursor: pointer;
   transition: background 0.2s ease, transform 0.1s ease;
   padding: 0;
-  /* importante */
 }
 
 .send-btn .material-icons {
   font-size: 22px;
-  /* icono más visible */
-  transform: translateX(1px);
-  /* centra ópticamente */
+  transform: translateX(1px); /* centrado óptico */
 }
 
 .send-btn:hover {
@@ -381,10 +428,10 @@ body {
   opacity: 0.6;
 }
 
-
-/* ===========================
-   THEME (Dark / Light)
-=========================== */
+/* =========================================================
+   THEME SYSTEM (Dark / Light)
+   - Variables CSS para cambiar colores sin reescribir todo
+========================================================= */
 :root {
   --bg: #0a1014;
   --panel: #202c33;
@@ -396,6 +443,7 @@ body {
   --accent: #00a884;
 }
 
+/* Tema claro: sobreescribe variables */
 body[data-theme="light"] {
   --bg: #f3f4f6;
   --panel: #ffffff;
@@ -407,32 +455,23 @@ body[data-theme="light"] {
   --accent: #2563eb;
 }
 
-/* aplica variables a tu layout */
-body {
-  background: var(--bg);
-}
+/* Aplica variables a componentes */
+body { background: var(--bg); }
 
 .sidebar {
   background: var(--panel);
   color: var(--text);
 }
 
-.chat-header {
-  background: var(--panel);
-}
-
-.chat-input {
-  background: var(--panel);
-}
+.chat-header { background: var(--panel); }
+.chat-input  { background: var(--panel); }
 
 #message {
   background: var(--panel2);
   color: var(--text);
 }
 
-#message::placeholder {
-  color: var(--muted);
-}
+#message::placeholder { color: var(--muted); }
 
 .bubble.me {
   background: var(--me);
@@ -444,10 +483,7 @@ body {
   color: var(--text);
 }
 
-.bubble .user {
-  color: var(--muted);
-}
-
+.bubble .user,
 .bubble .meta {
   color: var(--muted);
 }
@@ -457,17 +493,13 @@ body {
   color: var(--muted);
 }
 
-.send-btn {
-  background: var(--accent);
-}
+.send-btn { background: var(--accent); }
+.send-btn:hover { filter: brightness(1.05); }
 
-.send-btn:hover {
-  filter: brightness(1.05);
-}
-
-/* ===========================
-   AVATAR + LAYOUT MENSAJE
-=========================== */
+/* =========================================================
+   AVATAR + LAYOUT DE MENSAJE
+   - fila con avatar + burbuja
+========================================================= */
 .msg-row {
   display: flex;
   align-items: flex-end;
@@ -479,28 +511,32 @@ body {
   justify-content: flex-end;
 }
 
+/* Avatar para mensajes de otros */
 .avatar {
   width: 28px;
   height: 28px;
   border-radius: 50%;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   font-size: 12px;
   font-weight: 700;
   color: #fff;
+
   flex: 0 0 auto;
   user-select: none;
 }
 
+/* Para mis mensajes, ocultamos avatar (estilo WhatsApp) */
 .msg-row.me .avatar {
   display: none;
-  /* para mí lo ocultamos (estilo WhatsApp) */
 }
 
-/* ===========================
-   ANIMACIÓN "INFLAR"
-=========================== */
+/* =========================================================
+   ANIMACIÓN "POP IN" (aparece inflándose)
+========================================================= */
 .bubble {
   transform-origin: bottom left;
   animation: popIn 160ms ease-out;
@@ -511,27 +547,22 @@ body {
 }
 
 @keyframes popIn {
-  from {
-    transform: scale(0.96);
-    opacity: 0;
-  }
-
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
+  from { transform: scale(0.96); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
 }
 
-/* ===========================
-   TOGGLE (botón)
-=========================== */
+/* =========================================================
+   TOGGLE THEME (botón)
+========================================================= */
 .theme-toggle {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+
   border: 1px solid color-mix(in srgb, var(--muted) 35%, transparent);
   background: transparent;
   color: var(--text);
+
   padding: 6px 10px;
   border-radius: 999px;
   cursor: pointer;
@@ -543,63 +574,38 @@ body {
   color: var(--muted);
 }
 
+/* =========================================================
+   BUZZ (animación shake)
+   - clase .buzz se añade a .chat desde JS
+========================================================= */
 @keyframes buzzShake {
-  0% {
-    transform: translateX(0);
-  }
-
-  10% {
-    transform: translateX(-6px);
-  }
-
-  20% {
-    transform: translateX(6px);
-  }
-
-  30% {
-    transform: translateX(-5px);
-  }
-
-  40% {
-    transform: translateX(5px);
-  }
-
-  50% {
-    transform: translateX(-4px);
-  }
-
-  60% {
-    transform: translateX(4px);
-  }
-
-  70% {
-    transform: translateX(-3px);
-  }
-
-  80% {
-    transform: translateX(3px);
-  }
-
-  90% {
-    transform: translateX(-2px);
-  }
-
-  100% {
-    transform: translateX(0);
-  }
+  0%   { transform: translateX(0); }
+  10%  { transform: translateX(-6px); }
+  20%  { transform: translateX(6px); }
+  30%  { transform: translateX(-5px); }
+  40%  { transform: translateX(5px); }
+  50%  { transform: translateX(-4px); }
+  60%  { transform: translateX(4px); }
+  70%  { transform: translateX(-3px); }
+  80%  { transform: translateX(3px); }
+  90%  { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
 }
 
 .buzz {
   animation: buzzShake 420ms ease-in-out;
 }
 
+/* Botón de buzz */
 #buzzBtn {
   background: transparent;
   border: none;
   cursor: pointer;
+
   font-size: 18px;
   padding: 8px;
   border-radius: 8px;
+
   opacity: 0.7;
   transition: background 0.2s, opacity 0.2s, transform 0.1s;
 }
@@ -613,14 +619,17 @@ body {
   transform: scale(0.9);
 }
 
-
+/* =========================================================
+   EMOJI PANEL
+   - Panel flotante sobre el input
+========================================================= */
 .emoji-wrap {
   position: relative;
 }
 
 .emoji-panel {
   position: absolute;
-  bottom: 48px;
+  bottom: 48px; /* arriba del input */
   left: 0;
 
   width: 280px;
@@ -632,8 +641,8 @@ body {
   border-radius: 12px;
   padding: 10px;
 
-  display: none;
-  z-index: 99999;
+  display: none;   /* se alterna con JS */
+  z-index: 99999;  /* por encima de todo */
   box-shadow: 0 12px 30px rgba(0,0,0,.45);
 }
 

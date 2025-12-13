@@ -72,6 +72,17 @@ connection.on("ReceiveHistory", list => {
   // Renderiza cada mensaje del historial
   list.forEach(m => {
     const isMe = m.user === currentUser;
+    
+    // ✅ Si es zumbido, muéstralo como sistema y NO como burbuja "__BUZZ__"
+    if ((m.text || "").trim() === CONFIG.buzz.key) {
+      addSystem(`🔔 Zumbido de ${m.user}`);
+      // Opcional: NO reproducir audio ni shake en historial
+      // Si lo quieres también en historial, descomenta:
+      // playBuzz?.();
+      // triggerBuzzUI?.();
+      return;
+    }
+
     addMessage(m.user, m.text, m.at, isMe);
   });
 });
