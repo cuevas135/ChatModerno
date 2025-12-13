@@ -64,25 +64,19 @@
 
       <footer class="chat-input">
         <!-- Botón emoji + panel -->
-        <div style="position:relative;">
-          <button class="icon-btn" id="emojiBtn" title="Emojis">
-            <span class="material-icons">emoji_emotions</span>
-          </button>
-          <div class="emoji-panel" id="emojiPanel">
-            <span>😀</span><span>😃</span><span>😄</span><span>😁</span><span>😆</span><span>😅</span><span>😂</span>
-            <span>🤣</span><span>😊</span><span>😇</span><span>🙂</span><span>🙃</span><span>😉</span><span>😌</span>
-            <span>😍</span><span>😘</span><span>😗</span><span>😙</span><span>😚</span><span>🤗</span><span>🤩</span>
-            <span>🤔</span><span>🤨</span><span>😎</span><span>🤓</span><span>🥳</span><span>😴</span><span>🤯</span>
-            <span>❤</span><span>🔥</span><span>👍</span><span>👏</span><span>✨</span><span>🌟</span>
-          </div>
-        </div>
+        <div class="emoji-wrap">
+  <button class="icon-btn" id="emojiBtn" title="Emojis">
+    <span class="material-icons">emoji_emotions</span>
+  </button>
+
+  <!-- VACÍO, se llena por JS -->
+  <div class="emoji-panel" id="emojiPanel"></div>
+</div>
+
+
 
         <!-- Stickers rápidos (iconos como mensajes) -->
         <div class="stickers">
-          <button class="sticker-btn" data-sticker="👍">👍</button>
-          <button class="sticker-btn" data-sticker="😂">😂</button>
-          <button class="sticker-btn" data-sticker="❤️">❤️</button>
-          <button class="sticker-btn" data-sticker="🔥">🔥</button>
         </div>
 
         <!-- Input mensaje -->
@@ -94,6 +88,11 @@
         <button class="icon-btn send-btn" id="send" disabled title="Enviar">
           <span class="material-icons">send</span>
         </button>
+       <button class="icon-btn" id="buzzBtn" title="Zumbido">
+  <span class="material-icons">notifications_active</span>
+</button>
+
+
       </footer>
     </section>
   </div>

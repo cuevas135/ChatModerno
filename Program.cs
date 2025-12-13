@@ -9,6 +9,8 @@ builder.Services.AddCors(o =>
     o.AddDefaultPolicy(p =>
         p.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed(_ => true));
 });
+
+
 builder.Services.AddSingleton<ChatRoomStore>();
 
 var app = builder.Build();
