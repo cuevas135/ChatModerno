@@ -4,7 +4,10 @@ Cada vez que modifiques algo:
 git add .
 git commit -m "Descripción del cambio"
 git push
+
+Trae los cambios del remoto
 ===============================================
+git pull origin main --rebase
 
 
 Ejecuta la aplicación:
