@@ -21,7 +21,7 @@ jobs:
       - name: Restore
         run: dotnet restore
 
-      - name: Publish (Self-contained win-x64)
+      - name: Publish (Self-contained win-x86)
         run: dotnet publish -c Release -r win-x86 --self-contained true -o publish
 
       - name: Deploy to Azure Web App
