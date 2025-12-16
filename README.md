@@ -85,3 +85,39 @@ En tu archivo ChatSalaModern.csproj, asegúrate de que esté configurado de esta
 </Project>
 ```
 
+2. Publicar correctamente en 32 bits
+
+Asegúrate de que el comando de publicación en GitHub Actions esté configurado para win-x86:
+
+```
+- name: Publish (Self-contained win-x86)
+  run: dotnet publish ./ChatSalaModern.csproj -c Release -r win-x86 --self-contained true -o publish
+```
+Este comando genera los archivos self-contained (incluyendo el runtime) y los coloca en la carpeta publish.
+
+3. Configuración de Web.config
+
+Asegúrate de que el archivo web.config esté en la raíz del proyecto y tenga el siguiente contenido para que Azure pueda ejecutar correctamente tu aplicación:
+
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <system.webServer>
+    <handlers>
+      <add name="aspNetCore"
+           path="*"
+           verb="*"
+           modules="AspNetCoreModuleV2"
+           resourceType="Unspecified" />
+    </handlers>
+
+    <aspNetCore
+      processPath=".\ChatSalaModern.exe"
+      arguments=""
+      stdoutLogEnabled="true"
+      stdoutLogFile=".\logs\stdout"
+      hostingModel="outofprocess" />
+  </system.webServer>
+</configuration>
+
+
+Esto le indica a Azure cómo ejecutar la aplicación self-contained.
