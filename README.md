@@ -186,7 +186,7 @@ jobs:
         1. En el portal de Azure, crea una App Service con un plan Windows.
         2. Asegúrate de que la plataforma esté configurada en 32 bits (esto es crucial).
         3. Activa WebSockets en General settings para habilitar el funcionamiento de SignalR. 
-        4. Configura el Application Logging en Filesystem con el nivel de Information para depurar    cualquier error.
+        4. Configura el Application Logging en Filesystem con el nivel de Information para depurar cualquier error.
 
 6. Solución de problemas comunes
  * 500.32 (ANCM Failed to Load dll): Este error es causado por una incompatibilidad entre la arquitectura de tu aplicación (x64) y la configuración de tu App Service (32-bit). Para solucionarlo, asegúrate de publicar en win-x86 y de configurar correctamente el web.config.
