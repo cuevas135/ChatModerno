@@ -1,22 +1,22 @@
 {
   "runtimeTarget": {
-    "name": ".NETCoreApp,Version=v9.0/win-x86",
+    "name": ".NETCoreApp,Version=v9.0/win-x64",
     "signature": ""
   },
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v9.0": {},
-    ".NETCoreApp,Version=v9.0/win-x86": {
+    ".NETCoreApp,Version=v9.0/win-x64": {
       "ChatSalaModern/1.0.0": {
         "dependencies": {
-          "runtimepack.Microsoft.NETCore.App.Runtime.win-x86": "9.0.10",
-          "runtimepack.Microsoft.AspNetCore.App.Runtime.win-x86": "9.0.10"
+          "runtimepack.Microsoft.NETCore.App.Runtime.win-x64": "9.0.10",
+          "runtimepack.Microsoft.AspNetCore.App.Runtime.win-x64": "9.0.10"
         },
         "runtime": {
           "ChatSalaModern.dll": {}
         }
       },
-      "runtimepack.Microsoft.NETCore.App.Runtime.win-x86/9.0.10": {
+      "runtimepack.Microsoft.NETCore.App.Runtime.win-x64/9.0.10": {
         "runtime": {
           "Microsoft.CSharp.dll": {
             "assemblyVersion": "9.0.0.0",
@@ -696,7 +696,7 @@
           }
         },
         "native": {
-          "Microsoft.DiaSymReader.Native.x86.dll": {
+          "Microsoft.DiaSymReader.Native.amd64.dll": {
             "fileVersion": "14.42.34436.0"
           },
           "System.IO.Compression.Native.dll": {
@@ -706,6 +706,9 @@
             "fileVersion": "9.0.1025.47515"
           },
           "clrgc.dll": {
+            "fileVersion": "9.0.1025.47515"
+          },
+          "clrgcexp.dll": {
             "fileVersion": "9.0.1025.47515"
           },
           "clrjit.dll": {
@@ -726,7 +729,7 @@
           "mscordaccore.dll": {
             "fileVersion": "9.0.1025.47515"
           },
-          "mscordaccore_x86_x86_9.0.1025.47515.dll": {
+          "mscordaccore_amd64_amd64_9.0.1025.47515.dll": {
             "fileVersion": "9.0.1025.47515"
           },
           "mscordbi.dll": {
@@ -740,7 +743,7 @@
           }
         }
       },
-      "runtimepack.Microsoft.AspNetCore.App.Runtime.win-x86/9.0.10": {
+      "runtimepack.Microsoft.AspNetCore.App.Runtime.win-x64/9.0.10": {
         "runtime": {
           "Microsoft.AspNetCore.Antiforgery.dll": {
             "assemblyVersion": "9.0.0.0",
@@ -1317,19 +1320,19 @@
       "serviceable": false,
       "sha512": ""
     },
-    "runtimepack.Microsoft.NETCore.App.Runtime.win-x86/9.0.10": {
+    "runtimepack.Microsoft.NETCore.App.Runtime.win-x64/9.0.10": {
       "type": "runtimepack",
       "serviceable": false,
       "sha512": ""
     },
-    "runtimepack.Microsoft.AspNetCore.App.Runtime.win-x86/9.0.10": {
+    "runtimepack.Microsoft.AspNetCore.App.Runtime.win-x64/9.0.10": {
       "type": "runtimepack",
       "serviceable": false,
       "sha512": ""
     }
   },
   "runtimes": {
-    "win-x86": [
+    "win-x64": [
       "win",
       "any",
       "base"
