@@ -60,3 +60,28 @@ ChatModerno/
 | Frontend      | HTML5, CSS3, JavaScript ES6 |
 | Librerías CDN | @microsoft/signalr          |
 | Hosting local | Kestrel                     |
+
+## 🚀 Deploy a Azure App Service (Windows)
+
+Este proyecto fue desplegado usando Azure App Service en Windows con .NET 9 en un plan 32 bits. A continuación te detallo los pasos seguidos para que puedas replicarlo.
+
+1. Preparación del proyecto
+
+Asegúrate de que el proyecto esté correctamente configurado para self-contained en win-x86. Esto asegura que el runtime de .NET 9 venga dentro del proyecto y sea compatible con el plan 32 bits de Azure.
+
+En tu archivo ChatSalaModern.csproj, asegúrate de que esté configurado de esta manera:
+
+```
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+
+    <RuntimeIdentifier>win-x86</RuntimeIdentifier> <!-- Especificar 32 bits -->
+    <SelfContained>true</SelfContained>  <!-- Incluir el runtime con la app -->
+  </PropertyGroup>
+</Project>
+```
+
