@@ -28,12 +28,10 @@ connection.on("ReceiveMessage", msg => {
   // 2) input de UI (si existe)
   // 3) default de CONFIG
   const currentUser =
-    STATE.user ||
-    (UI.userEl.value || "").trim() ||
-    CONFIG.defaults.user;
+    (STATE.user || (UI.userEl?.value || "").trim() || CONFIG.defaults.user).trim();
 
   // Se considera "mi mensaje" si coincide el usuario
-  const isMe = msg.user === currentUser;
+  const isMe = (msg.user || "").trim() === currentUser;
 
   // -------------------------------
   // Caso especial: Buzz/Zumbido
@@ -69,11 +67,11 @@ connection.on("ReceiveHistory", list => {
 
   // Calcula el usuario actual para marcar "isMe" correctamente
   const currentUser =
-    (STATE.user || (UI.userEl.value || "").trim() || CONFIG.defaults.user);
+    (STATE.user || (UI.userEl?.value || "").trim() || CONFIG.defaults.user).trim();
 
   // Renderiza cada mensaje del historial
   list.forEach(m => {
-    const isMe = m.user === currentUser;
+    const isMe = (m.user || "").trim() === currentUser;
 
     // ✅ Si es zumbido, muéstralo como sistema y NO como burbuja "__BUZZ__"
     if ((m.text || "").trim() === CONFIG.buzz.key) {
@@ -96,7 +94,7 @@ connection.on("UserTyping", user => {
 });
 
 // ===============================
-// Arranque con reintentos
+// Arranque + estados de reconexión
 // ===============================
 
 connection.onreconnecting(() => {
@@ -113,7 +111,9 @@ connection.onreconnected(() => {
 
   // Re-join usando STATE (no inputs)
   if (STATE.room) {
-    connection.invoke("JoinRoom", STATE.room, STATE.user || CONFIG.defaults.user).catch(() => { });
+    connection
+      .invoke("JoinRoom", STATE.room, STATE.user || CONFIG.defaults.user)
+      .catch(() => {});
   }
 
   startKeepAlive();
@@ -121,16 +121,17 @@ connection.onreconnected(() => {
 
 connection.onclose(() => {
   addSystem("❌ Conexión cerrada");
+
   if (keepAliveController) {
     keepAliveController.abort();
     keepAliveController = null;
   }
+
   STATE.setConnected(false);
 });
 
-
 // Inicia la conexión a SignalR
-// Si falla, reintenta usando CONFIG.reconnect.retryMs
+// Nota: con withAutomaticReconnect(), NO hacemos setTimeout de reintento manual
 async function startConnection() {
   try {
     await connection.start();
@@ -140,7 +141,8 @@ async function startConnection() {
     STATE.setConnected(false);
     console.error("Error conectando a SignalR:", err);
 
-    // Reintenta conexión tras cierto tiempo
+    // Si quieres un reintento inicial (antes de que auto-reconnect aplique),
+    // puedes mantener este setTimeout. Si no, puedes eliminarlo.
     setTimeout(startConnection, CONFIG.reconnect.retryMs);
   }
 }
@@ -150,9 +152,7 @@ startConnection();
 
 function startKeepAlive() {
   // Si ya existe uno, lo cancelamos
-  if (keepAliveController) {
-    keepAliveController.abort();
-  }
+  if (keepAliveController) keepAliveController.abort();
 
   keepAliveController = new AbortController();
   const { signal } = keepAliveController;
@@ -164,17 +164,10 @@ function startKeepAlive() {
     }
 
     if (connection.state === signalR.HubConnectionState.Connected) {
-      connection.invoke("Ping").catch(() => { });
+      connection.invoke("Ping").catch(() => {});
     }
   }, 120000); // cada 2 minutos
 }
-
-// ===============================
-// Eventos de conexión
-// ===============================
-
-
-
 
 // ===============================
 // Eventos UI -> Hub
@@ -188,13 +181,13 @@ UI.btnJoin?.addEventListener("click", async () => {
   const { user, room } = STATE.readFromInputs();
 
   // No intentar invocar si no está conectado
-  if (!connection || connection.state !== "Connected") return;
+  if (!connection || connection.state !== signalR.HubConnectionState.Connected) return;
 
   // Marca estado interno de "está en sala"
   STATE.enteredRoom(user, room);
 
   // Llama al método JoinRoom en el Hub
-  await connection.invoke("JoinRoom", room, user); f
+  await connection.invoke("JoinRoom", room, user);
 
   // Actualiza el estado de la UI para modo "en sala"
   UI.msgEl.disabled = UI.btnSend.disabled = UI.btnLeave.disabled = false;
@@ -214,10 +207,8 @@ UI.btnJoin?.addEventListener("click", async () => {
 // -------------------------------
 UI.btnLeave?.addEventListener("click", async () => {
   const { user, room } = STATE.readFromInputs();
-  if (STATE.isInRoom && room) {
-    connection.invoke("JoinRoom", room, user).catch(() => { });
-  }
-  if (!connection || connection.state !== "Connected") return;
+
+  if (!connection || connection.state !== signalR.HubConnectionState.Connected) return;
 
   // Llama al método LeaveRoom del Hub
   await connection.invoke("LeaveRoom", room, user);
@@ -247,7 +238,7 @@ UI.btnSend?.addEventListener("click", async () => {
   if (!text) return;
 
   // Asegura conexión
-  if (!connection || connection.state !== "Connected") return;
+  if (!connection || connection.state !== signalR.HubConnectionState.Connected) return;
 
   // Llama al método SendMessage en el Hub
   await connection.invoke("SendMessage", room, user, text);
@@ -272,7 +263,7 @@ UI.msgEl?.addEventListener("keydown", e => {
 // TYPING: avisar "está escribiendo..." con debounce
 // -------------------------------
 UI.msgEl?.addEventListener("input", () => {
-  if (!connection || connection.state !== "Connected") return;
+  if (!connection || connection.state !== signalR.HubConnectionState.Connected) return;
 
   const now = Date.now();
 
@@ -285,7 +276,7 @@ UI.msgEl?.addEventListener("input", () => {
   STATE.lastTypingSentAt = now;
 
   // Invoca Typing en el Hub (si falla, se ignora)
-  connection.invoke("Typing", room, user).catch(() => { });
+  connection.invoke("Typing", room, user).catch(() => {});
 });
 
 // ===============================
@@ -299,7 +290,7 @@ UI.emojiBtn?.addEventListener("click", (e) => {
   UI.emojiPanel.style.display = visible ? "none" : "block";
 });
 
-UI.emojiPanel.addEventListener("click", e => {
+UI.emojiPanel?.addEventListener("click", e => {
   // Evita que el click cierre el panel
   e.stopPropagation();
 
@@ -312,7 +303,7 @@ UI.emojiPanel.addEventListener("click", e => {
 
 // Click fuera del panel: lo cierra
 document.addEventListener("click", e => {
-  if (!UI.emojiPanel.contains(e.target) && e.target !== UI.emojiBtn) {
+  if (UI.emojiPanel && !UI.emojiPanel.contains(e.target) && e.target !== UI.emojiBtn) {
     UI.emojiPanel.style.display = "none";
   }
 });
@@ -322,14 +313,14 @@ document.addEventListener("click", e => {
 // ===============================
 
 // Envía el sticker como mensaje (data-sticker contiene el texto/icono)
-UI.stickerButtons.forEach(btn => {
+UI.stickerButtons?.forEach(btn => {
   btn.addEventListener("click", async () => {
     const icon = btn.getAttribute("data-sticker") || "";
     if (!icon) return;
 
     const { user, room } = STATE.readFromInputs();
 
-    if (!connection || connection.state !== "Connected") return;
+    if (!connection || connection.state !== signalR.HubConnectionState.Connected) return;
 
     await connection.invoke("SendMessage", room, user, icon);
   });
@@ -346,7 +337,7 @@ if (UI.buzzBtn) {
     if (!CONFIG.buzz.enabled) return;
 
     // Si no hay conexión, muestra aviso en el chat
-    if (!connection || connection.state !== "Connected") {
+    if (!connection || connection.state !== signalR.HubConnectionState.Connected) {
       addSystem("⚠️ No estás conectado aún.");
       return;
     }
