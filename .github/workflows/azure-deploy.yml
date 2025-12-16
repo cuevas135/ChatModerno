@@ -25,7 +25,7 @@ jobs:
         run: dotnet clean
 
       - name: Publish (project only)
-        run: dotnet publish ./ChatSalaModern/ChatSalaModern.csproj -c Release -r win-x86 --self-contained true -o publish
+        run: dotnet publish ./ChatSalaModern.csproj -c Release -r win-x86 --self-contained true -o publish
 
       - name: Inspect publish output
         run: dir publish
