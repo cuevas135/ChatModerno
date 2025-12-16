@@ -66,7 +66,6 @@ ChatModerno/
 Este proyecto fue desplegado usando Azure App Service en Windows con .NET 9 en un plan 32 bits. A continuación te detallo los pasos seguidos para que puedas replicarlo.
 
 1. Preparación del proyecto
-
 Asegúrate de que el proyecto esté correctamente configurado para self-contained en win-x86. Esto asegura que el runtime de .NET 9 venga dentro del proyecto y sea compatible con el plan 32 bits de Azure.
 
 En tu archivo ChatSalaModern.csproj, asegúrate de que esté configurado de esta manera:
@@ -85,7 +84,6 @@ En tu archivo ChatSalaModern.csproj, asegúrate de que esté configurado de esta
 ```
 
 2. Publicar correctamente en 32 bits
-
 Asegúrate de que el comando de publicación en GitHub Actions esté configurado para win-x86:
 
 ```
@@ -95,7 +93,6 @@ Asegúrate de que el comando de publicación en GitHub Actions esté configurado
 Este comando genera los archivos self-contained (incluyendo el runtime) y los coloca en la carpeta publish.
 
 3. Configuración de Web.config
-
 Asegúrate de que el archivo web.config esté en la raíz del proyecto y tenga el siguiente contenido para que Azure pueda ejecutar correctamente tu aplicación:
 
 ```
@@ -122,7 +119,6 @@ Asegúrate de que el archivo web.config esté en la raíz del proyecto y tenga e
 Esto le indica a Azure cómo ejecutar la aplicación self-contained.
 
 4. GitHub Actions para despliegue automático
-
 La configuración de GitHub Actions te permite automatizar el proceso de despliegue cada vez que haces un git push a la rama main. El flujo de trabajo incluye los pasos para:
  1. Restaurar las dependencias
  2. Limpiar cualquier build previo
@@ -172,18 +168,15 @@ jobs:
 ```
 
 5. Configuración de Azure App Service
-
- 1. En el portal de Azure, crea una App Service con un plan Windows.
- 2. Asegúrate de que la plataforma esté configurada en 32 bits (esto es crucial).
- 3. Activa WebSockets en General settings para habilitar el funcionamiento de SignalR. 
- 4. Configura el Application Logging en Filesystem con el nivel de Information para depurar    cualquier error.
+ * En el portal de Azure, crea una App Service con un plan Windows.
+ * Asegúrate de que la plataforma esté configurada en 32 bits (esto es crucial).
+ * Activa WebSockets en General settings para habilitar el funcionamiento de SignalR. 
+ * Configura el Application Logging en Filesystem con el nivel de Information para depurar    cualquier error.
 
 6. Solución de problemas comunes
-
  * 500.32 (ANCM Failed to Load dll): Este error es causado por una incompatibilidad entre la arquitectura de tu aplicación (x64) y la configuración de tu App Service (32-bit). Para solucionarlo, asegúrate de publicar en win-x86 y de configurar correctamente el web.config.
  * Index no carga: Verifica que el archivo index.html esté correctamente dentro de la carpeta wwwroot y que la configuración de fallback sea correcta.
 
 7. Validaciones y Logs
-
  * Activa stdout logs en Azure para recibir información detallada sobre el estado de la aplicación. Puedes revisar estos logs en el Log stream.
  * Si la app no carga, asegúrate de que el index.html esté presente y correctamente servido por el servidor.
