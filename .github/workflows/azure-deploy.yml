@@ -13,7 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup .NET 9
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "9.0.x"
@@ -24,8 +24,12 @@ jobs:
       - name: Clean
         run: dotnet clean
 
+      - name: Remove publish folder
+        run: if (Test-Path publish) { Remove-Item publish -Recurse -Force }
+        shell: pwsh
+
       - name: Publish (project only)
-        run: dotnet publish ./ChatSalaModern.csproj -c Release -r win-x86 --self-contained true -o publish
+        run: dotnet publish ChatSalaModern.csproj -c Release -r win-x86 --self-contained true -o publish --no-restore
 
       - name: Inspect publish output
         run: dir publish
