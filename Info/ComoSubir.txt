@@ -1,0 +1,42 @@
+1) Subir el proyecto a GitHub
+Tener el proyecto en un repo (main).
+Si te salió el error de git push ... (fetch first), era porque el repo remoto ya tenía 
+commits → se soluciona con:
+git pull origin main --rebase y luego git push.
+
+2) Elegir Azure App Service (Windows) y entender el 32 bits
+Tu plan no permitía 64 bits, así que Azure corría en 32 bits.
+Eso es clave porque si publicas tu app para x64 y el worker es x86 → sale el HTTP 500.32 
+(ANCM Failed to Load dll).
+
+3) Publicar correctamente para ese App Service
+La solución fue publicar self-contained en win-x86, o sea: llevar el runtime incluido y 
+compatible con 32 bits.
+Comando base:
+dotnet publish ChatSalaModern.csproj -c Release -r win-x86 --self-contained true -o publish
+
+Y aprendiste otra cosa importante:
+No usar -o publish apuntando a una solution (.sln) porque da el warning NETSDK1194.
+Por eso se cambió a publicar el .csproj directamente.
+
+4) GitHub Actions para compilar + publicar + desplegar
+Se creó el workflow (azure-deploy.yml) que hace:
+Checkout del repo
+Instala .NET
+Restore/Clean
+Publish del csproj a la carpeta publish
+Deploy usando azure/webapps-deploy con el publish profile guardado en secrets
+Eso te automatiza todo: cada push a main despliega.
+
+5) Evitar errores típicos del deploy
+Duplicate Content items con web.config: pasaba porque estabas incluyendo manualmente algo 
+que .NET ya incluye por defecto. Se solucionó quitando la duplicación (o dejando que el SDK 
+lo copie solo).
+Verificar que en Azure realmente llegó index.html dentro de wwwroot (y llegó).
+
+6) Configurar el pipeline de ASP.NET Core para servir tu frontend
+En Program.cs quedó (concepto):
+UseDefaultFiles() y UseStaticFiles() para servir wwwroot
+MapHub("/chat")
+MapFallbackToFile("index.html") para que siempre cargue el chat aunque entres 
+a rutas directas

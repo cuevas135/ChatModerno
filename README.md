@@ -1,26 +1,26 @@
 # 💬 ChatModerno — ASP.NET Core 9 + SignalR
 
-**ChatModerno** es una aplicación de chat en tiempo real construida con **.NET 9**, **C# moderno** y **SignalR**.  
-Permite crear salas dinámicas, mostrar historial, ver usuarios escribiendo (“typing indicator”) y manejar mensajes en vivo con una interfaz simple en HTML + JavaScript.
+ChatModerno es una aplicación de chat en tiempo real construida con ASP.NET Core 9, C# moderno y SignalR.
+Permite crear salas dinámicas, mostrar historial de mensajes, visualizar cuándo un usuario está escribiendo (typing indicator) y manejar comunicación en vivo mediante una interfaz web simple basada en HTML + JavaScript puro.
 
 
 ## 🚀 Características
 
-- ✅ Framework: **.NET 9.0**
-- 💬 Comunicación en tiempo real con **SignalR**
-- 🧠 Almacenamiento de historial en memoria (ChatRoomStore)
-- 🧍‍♂️ Sistema de salas dinámicas (join / leave / switch)
-- ✍️ Indicador de escritura (“user typing”)
-- 📱 Interfaz web minimalista (HTML + JS puro)
-- ⚙️ Arquitectura limpia: modelos, servicios y hub separados
-- 🔒 CORS habilitado (para pruebas desde cualquier origen)
-- 🌙 Listo para extender con base de datos o autenticación
+    ✅ Framework: ASP.NET Core 9.0
+    💬 Comunicación en tiempo real con SignalR
+    🧠 Almacenamiento de historial en memoria (ChatRoomStore)
+    🧍‍♂️ Sistema de salas dinámicas (join / leave / cambio de sala)
+    ✍️ Indicador de escritura (user typing)
+    📱 Interfaz web minimalista (HTML + JS sin frameworks)
+    ⚙️ Arquitectura limpia: Hubs, Models y Services separados
+    🔒 CORS habilitado (ideal para pruebas y desarrollo)
+    🌙 Preparado para extender con base de datos, Redis o autenticación
 
 
 ## 🧩 Estructura del proyecto
 
 ```
-ChatModerno/
+ChatSalaModern/
 ├── Hubs/
 │   └── ChatHub.cs
 ├── Models/
@@ -32,23 +32,36 @@ ChatModerno/
 │   ├── css/
 │   │   └── styles.css
 │   └── js/
+│       ├── config.js
+│       ├── state.js
 │       ├── utils.js
 │       ├── ui.js
 │       ├── theme.js
 │       └── signalr.js
-|       └── state.js
-|       └── config.js
 ├── Program.cs
-├── ChatModerno.csproj
+├── ChatSalaModern.csproj
 └── README.md
 ```
 
 ## 🧠 Cómo funciona
 
-- Program.cs configura SignalR, CORS y los archivos estáticos.
-- ChatHub.cs define los métodos que envían y reciben mensajes entre usuarios.
-- ChatRoomStore.cs guarda los mensajes recientes de cada sala (en memoria).
-- index.html se conecta al Hub, muestra mensajes y detecta escritura en tiempo real.
+    * Program.cs
+        Configura SignalR, CORS, archivos estáticos y el fallback para index.html.
+    * ChatHub.cs
+        Contiene los métodos del Hub que gestionan:
+            * Envío y recepción de mensajes
+            * Unión y salida de salas
+            * Indicador de escritura
+            * Eventos en tiempo real
+    * ChatRoomStore.cs
+        Almacena en memoria el historial reciente de mensajes por sala.
+    * Frontend (wwwroot)
+        * index.html: interfaz principal del chat
+        * signalr.js: conexión con el Hub
+        * ui.js: renderizado de mensajes y estados
+        * state.js: estado global del cliente
+        * config.js: configuración centralizada
+        * theme.js: manejo de tema claro / oscuro
 
 ## 🧰 Tecnologías utilizadas
 
@@ -168,12 +181,10 @@ jobs:
 ```
 
 5. Configuración de Azure App Service
-```markdown
     * En el portal de Azure, crea una App Service con un plan Windows.
     * Asegúrate de que la plataforma esté configurada en 32 bits (esto es crucial).
     * Activa WebSockets en General settings para habilitar el funcionamiento de SignalR. 
     * Configura el Application Logging en Filesystem con el nivel de Information para depurar    cualquier error.
-```
 
 6. Solución de problemas comunes
  * 500.32 (ANCM Failed to Load dll): Este error es causado por una incompatibilidad entre la arquitectura de tu aplicación (x64) y la configuración de tu App Service (32-bit). Para solucionarlo, asegúrate de publicar en win-x86 y de configurar correctamente el web.config.
