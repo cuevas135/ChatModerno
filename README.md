@@ -133,6 +133,7 @@ Esto le indica a Azure cómo ejecutar la aplicación self-contained.
 
 4. GitHub Actions para despliegue automático
 La configuración de GitHub Actions te permite automatizar el proceso de despliegue cada vez que haces un git push a la rama main. El flujo de trabajo incluye los pasos para:
+
         1. Restaurar las dependencias
         2. Limpiar cualquier build previo
         3. Publicar el proyecto
