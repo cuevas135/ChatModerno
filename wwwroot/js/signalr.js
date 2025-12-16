@@ -136,11 +136,18 @@ async function startConnection() {
   try {
     await connection.start();
     STATE.setConnected(true);
+
+    UI.btnJoin.disabled = false;
+    addSystem("✅ Conectado. Ya puedes unirte a una sala.");
+
     startKeepAlive();
   } catch (err) {
     STATE.setConnected(false);
     console.error("Error conectando a SignalR:", err);
 
+    UI.btnJoin.disabled = true;
+    addSystem("❌ No se pudo conectar. Reintentando...");
+    
     // Si quieres un reintento inicial (antes de que auto-reconnect aplique),
     // puedes mantener este setTimeout. Si no, puedes eliminarlo.
     setTimeout(startConnection, CONFIG.reconnect.retryMs);
