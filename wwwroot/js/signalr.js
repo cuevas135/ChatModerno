@@ -74,7 +74,7 @@ connection.on("ReceiveHistory", list => {
   // Renderiza cada mensaje del historial
   list.forEach(m => {
     const isMe = m.user === currentUser;
-    
+
     // ✅ Si es zumbido, muéstralo como sistema y NO como burbuja "__BUZZ__"
     if ((m.text || "").trim() === CONFIG.buzz.key) {
       addSystem(`🔔 Zumbido de ${m.user}`);
@@ -113,7 +113,7 @@ connection.onreconnected(() => {
 
   // Re-join usando STATE (no inputs)
   if (STATE.room) {
-    connection.invoke("JoinRoom", STATE.room, STATE.user || CONFIG.defaults.user).catch(() => {});
+    connection.invoke("JoinRoom", STATE.room, STATE.user || CONFIG.defaults.user).catch(() => { });
   }
 
   startKeepAlive();
@@ -164,7 +164,7 @@ function startKeepAlive() {
     }
 
     if (connection.state === signalR.HubConnectionState.Connected) {
-      connection.invoke("Ping").catch(() => {});
+      connection.invoke("Ping").catch(() => { });
     }
   }, 120000); // cada 2 minutos
 }
@@ -190,11 +190,11 @@ UI.btnJoin?.addEventListener("click", async () => {
   // No intentar invocar si no está conectado
   if (!connection || connection.state !== "Connected") return;
 
-    // Marca estado interno de "está en sala"
+  // Marca estado interno de "está en sala"
   STATE.enteredRoom(user, room);
 
   // Llama al método JoinRoom en el Hub
-  await connection.invoke("JoinRoom", room, user);f
+  await connection.invoke("JoinRoom", room, user); f
 
   // Actualiza el estado de la UI para modo "en sala"
   UI.msgEl.disabled = UI.btnSend.disabled = UI.btnLeave.disabled = false;
@@ -214,7 +214,9 @@ UI.btnJoin?.addEventListener("click", async () => {
 // -------------------------------
 UI.btnLeave?.addEventListener("click", async () => {
   const { user, room } = STATE.readFromInputs();
-
+  if (STATE.isInRoom && room) {
+    connection.invoke("JoinRoom", room, user).catch(() => { });
+  }
   if (!connection || connection.state !== "Connected") return;
 
   // Llama al método LeaveRoom del Hub
@@ -283,7 +285,7 @@ UI.msgEl?.addEventListener("input", () => {
   STATE.lastTypingSentAt = now;
 
   // Invoca Typing en el Hub (si falla, se ignora)
-  connection.invoke("Typing", room, user).catch(() => {});
+  connection.invoke("Typing", room, user).catch(() => { });
 });
 
 // ===============================
