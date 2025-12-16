@@ -11,12 +11,11 @@
 window.safe = function safe(s) {
   return (s ?? "")
     .toString()
-    .replace(/[<>&]/g, c => ({
-      "<": "&lt;",
-      ">": "&gt;",
-      "&": "&amp;"
-    }[c] || c));
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 };
+
 
 // -------------------------------
 // Formato de fecha y hora
@@ -79,7 +78,7 @@ let audioCtx = null;
 // No utiliza archivos externos (Web Audio API)
 window.playPing = function playPing() {
   // Verifica si el sonido está habilitado
-  if (!CONFIG.sound.enabled) return;
+  if (!CONFIG?.sound?.enabled) return;
 
   try {
     // Crea o reutiliza el AudioContext
