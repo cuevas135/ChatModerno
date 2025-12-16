@@ -29,6 +29,6 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.MapHub<ChatHub>("/chat");
-app.MapFallbackToFile("/index.html"); // sirve el index
+app.MapFallbackToFile("index.html"); // sirve el index
 
 app.Run();
