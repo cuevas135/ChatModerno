@@ -230,4 +230,13 @@ public class ChatHub : Hub
             $"{user} se unió a {to}"
         );
     }
+
+    /// <summary>
+    /// Mantiene viva la conexión.
+    /// </summary>
+    public Task Ping()
+    {
+        return Task.CompletedTask;
+    }
+
 }

@@ -3,6 +3,8 @@
 // Requiere: CONFIG, STATE, UI, addMessage, addSystem, showTyping, playPing
 // ===============================
 
+let keepAliveController = null;
+
 // -------------------------------
 // Conexión al Hub de SignalR
 // -------------------------------
@@ -97,12 +99,43 @@ connection.on("UserTyping", user => {
 // Arranque con reintentos
 // ===============================
 
+connection.onreconnecting(() => {
+  addSystem("⚠️ Conexión perdida… reconectando");
+
+  if (keepAliveController) {
+    keepAliveController.abort();
+    keepAliveController = null;
+  }
+});
+
+connection.onreconnected(() => {
+  addSystem("✅ Conectado nuevamente");
+
+  // Re-join usando STATE (no inputs)
+  if (STATE.room) {
+    connection.invoke("JoinRoom", STATE.room, STATE.user || CONFIG.defaults.user).catch(() => {});
+  }
+
+  startKeepAlive();
+});
+
+connection.onclose(() => {
+  addSystem("❌ Conexión cerrada");
+  if (keepAliveController) {
+    keepAliveController.abort();
+    keepAliveController = null;
+  }
+  STATE.setConnected(false);
+});
+
+
 // Inicia la conexión a SignalR
 // Si falla, reintenta usando CONFIG.reconnect.retryMs
 async function startConnection() {
   try {
     await connection.start();
     STATE.setConnected(true);
+    startKeepAlive();
   } catch (err) {
     STATE.setConnected(false);
     console.error("Error conectando a SignalR:", err);
@@ -114,6 +147,34 @@ async function startConnection() {
 
 // Inicia conexión al cargar el script
 startConnection();
+
+function startKeepAlive() {
+  // Si ya existe uno, lo cancelamos
+  if (keepAliveController) {
+    keepAliveController.abort();
+  }
+
+  keepAliveController = new AbortController();
+  const { signal } = keepAliveController;
+
+  const interval = setInterval(() => {
+    if (signal.aborted) {
+      clearInterval(interval);
+      return;
+    }
+
+    if (connection.state === signalR.HubConnectionState.Connected) {
+      connection.invoke("Ping").catch(() => {});
+    }
+  }, 120000); // cada 2 minutos
+}
+
+// ===============================
+// Eventos de conexión
+// ===============================
+
+
+
 
 // ===============================
 // Eventos UI -> Hub
@@ -129,11 +190,11 @@ UI.btnJoin?.addEventListener("click", async () => {
   // No intentar invocar si no está conectado
   if (!connection || connection.state !== "Connected") return;
 
-  // Llama al método JoinRoom en el Hub
-  await connection.invoke("JoinRoom", room, user);
-
-  // Marca estado interno de "está en sala"
+    // Marca estado interno de "está en sala"
   STATE.enteredRoom(user, room);
+
+  // Llama al método JoinRoom en el Hub
+  await connection.invoke("JoinRoom", room, user);f
 
   // Actualiza el estado de la UI para modo "en sala"
   UI.msgEl.disabled = UI.btnSend.disabled = UI.btnLeave.disabled = false;
@@ -208,7 +269,7 @@ UI.msgEl?.addEventListener("keydown", e => {
 // -------------------------------
 // TYPING: avisar "está escribiendo..." con debounce
 // -------------------------------
-UI.msgEl.addEventListener("input", () => {
+UI.msgEl?.addEventListener("input", () => {
   if (!connection || connection.state !== "Connected") return;
 
   const now = Date.now();
