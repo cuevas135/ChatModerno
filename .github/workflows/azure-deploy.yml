@@ -21,8 +21,11 @@ jobs:
       - name: Restore
         run: dotnet restore
 
-      - name: Publish (Self-contained win-x86)
-        run: dotnet publish -c Release -r win-x86 --self-contained true -o publish
+      - name: Clean
+        run: dotnet clean
+
+      - name: Publish (project only)
+        run: dotnet publish ./ChatSalaModern/ChatSalaModern.csproj -c Release -r win-x86 --self-contained true -o publish
 
       - name: Inspect publish output
         run: dir publish
