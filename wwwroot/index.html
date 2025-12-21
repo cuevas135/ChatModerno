@@ -1,177 +1,177 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <!-- Configuración básica del documento -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <head>
+    <!-- Configuración básica del documento -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <!-- Título que aparece en la pestaña del navegador -->
-  <title>Chat Moderno</title>
+    <!-- Título que aparece en la pestaña del navegador -->
+    <title>Chat Moderno</title>
 
-  <!-- Material Icons: se usan para botones (enviar, emojis, tema, etc.) -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Material Icons: se usan para botones (enviar, emojis, tema, etc.) -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
 
-  <!-- Estilos principales del chat -->
-  <link href="css/styles.css" rel="stylesheet" />
-</head>
+    <!-- Estilos principales del chat -->
+    <link href="css/styles.css" rel="stylesheet" />
+  </head>
 
-<body>
-  <!-- Contenedor principal de la aplicación -->
-  <div class="app">
-
-    <!-- ======================
-         SIDEBAR (panel izquierdo)
-         ====================== -->
-    <aside class="sidebar">
-
-      <!-- Cabecera del sidebar -->
-      <div class="sidebar-header">
-        <div>
-          <div class="title">Chat Moderno</div>
-          <small>.NET 9 + SignalR</small>
-        </div>
-
-        <!-- Icono decorativo -->
-        <span class="material-icons" style="font-size:18px;opacity:0.8;">chat</span>
-      </div>
-
-      <!-- Sección: datos de la sesión -->
-      <div class="sidebar-section">Tu sesión</div>
-
-      <div class="sidebar-controls">
-        <!-- Nombre de usuario -->
-        <input id="user" placeholder="Tu nombre (ej. Astronauta)" />
-
-        <!-- Nombre de la sala -->
-        <input id="room" placeholder="Sala (ej. general)" />
-
-        <!-- Botones unirse / salir -->
-        <div class="sidebar-controls-row">
-          <button id="join" class="btn-join">Unirme</button>
-          <button id="leave" class="btn-leave" disabled>Salir</button>
-        </div>
-      </div>
-
-      <!-- Sección: ejemplos de salas -->
-      <div class="sidebar-section">Ejemplos de salas</div>
-      <div class="room-pill"># general</div>
-      <div class="room-pill"># soporte</div>
-      <div class="room-pill"># random</div>
-
-      <!-- Pie del sidebar -->
-      <div class="sidebar-footer">
-        <div>
-          💡 Tip: abre dos pestañas y entra a la misma sala para probar el chat en tiempo real.
-        </div>
-      </div>
-    </aside>
-
-    <!-- ======================
-         CHAT PRINCIPAL
-         ====================== -->
-    <section class="chat">
-
-      <!-- Cabecera del chat -->
-      <header class="chat-header">
-
-        <!-- Botón para cambiar entre tema oscuro / claro -->
-        <button class="theme-toggle" id="themeToggle" title="Cambiar tema">
-          <span class="material-icons" id="themeIcon">dark_mode</span>
-          <span id="themeText">Oscuro</span>
-        </button>
-
-        <!-- Información de la sala actual -->
-        <div class="info">
-          <span class="room-name" id="roomLabel">Ninguna sala</span>
-          <span class="status" id="statusLabel">Conéctate a una sala para empezar</span>
-        </div>
-
-        <!-- Badge decorativo -->
-        <div class="badge">SignalR en tiempo real</div>
-      </header>
-
-      <!-- Lista de mensajes (se llena dinámicamente con JS) -->
-      <main class="messages" id="log" aria-live="polite"></main>
-
-      <!-- Indicador "usuario está escribiendo..." -->
-      <div class="typing-indicator" id="typing"></div>
+  <body>
+    <!-- Contenedor principal de la aplicación -->
+    <div class="app" id="appRoot">
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
       <!-- ======================
-           INPUT DE MENSAJES
-           ====================== -->
-      <footer class="chat-input">
+         SIDEBAR (panel izquierdo)
+         ====================== -->
+      <aside class="sidebar">
+        <!-- Cabecera del sidebar -->
+        <div class="sidebar-header">
+          <div>
+            <div class="title">Chat Moderno</div>
+            <small>.NET 9 + SignalR</small>
+          </div>
 
-        <!-- Contenedor de emojis -->
-        <div class="emoji-wrap">
+          <!-- Icono decorativo -->
+          <span class="material-icons" style="font-size: 18px; opacity: 0.8"
+            >chat</span
+          >
+        </div>
 
-          <!-- Botón para abrir el panel de emojis -->
-          <button class="icon-btn" id="emojiBtn" title="Emojis">
-            <span class="material-icons">emoji_emotions</span>
+        <!-- Sección: datos de la sesión -->
+        <div class="sidebar-section">Tu sesión</div>
+
+        <div class="sidebar-controls">
+          <!-- Nombre de usuario -->
+          <input id="user" placeholder="Tu nombre (ej. Astronauta)" />
+
+          <!-- Nombre de la sala -->
+          <input id="room" placeholder="Sala (ej. general)" />
+
+          <!-- Botones unirse / salir -->
+          <div class="sidebar-controls-row">
+            <button id="join" class="btn-join">Unirme</button>
+            <button id="leave" class="btn-leave" disabled>Salir</button>
+          </div>
+        </div>
+
+        <!-- Sección: ejemplos de salas -->
+        <div class="sidebar-section">Ejemplos de salas</div>
+        <div class="room-pill"># general</div>
+        <div class="room-pill"># soporte</div>
+        <div class="room-pill"># random</div>
+
+        <!-- Pie del sidebar -->
+        <div class="sidebar-footer">
+          <div>
+            💡 Tip: abre dos pestañas y entra a la misma sala para probar el
+            chat en tiempo real.
+          </div>
+        </div>
+      </aside>
+
+      <!-- ======================
+         CHAT PRINCIPAL
+         ====================== -->
+      <section class="chat">
+        <!-- Cabecera del chat -->
+        <header class="chat-header">
+          <!-- ✅ Botón menú (CORRECTO: dentro del header) -->
+          <button class="icon-btn menu-btn" id="menuBtn" title="Menú">
+            <span class="material-icons">menu</span>
           </button>
 
-          <!-- Panel de emojis
+          <!-- Botón para cambiar entre tema oscuro / claro -->
+          <button class="theme-toggle" id="themeToggle" title="Cambiar tema">
+            <span class="material-icons" id="themeIcon">dark_mode</span>
+            <span id="themeText">Oscuro</span>
+          </button>
+
+          <!-- Información de la sala actual -->
+          <div class="info">
+            <span class="room-name" id="roomLabel">Ninguna sala</span>
+            <span class="status" id="statusLabel"
+              >Conéctate a una sala para empezar</span
+            >
+          </div>
+
+          <!-- Badge decorativo -->
+          <div class="badge">SignalR en tiempo real</div>
+        </header>
+
+        <!-- Lista de mensajes (se llena dinámicamente con JS) -->
+        <main class="messages" id="log" aria-live="polite"></main>
+
+        <!-- Indicador "usuario está escribiendo..." -->
+        <div class="typing-indicator" id="typing"></div>
+
+        <!-- ======================
+           INPUT DE MENSAJES
+           ====================== -->
+        <footer class="chat-input">
+          <!-- Contenedor de emojis -->
+          <div class="emoji-wrap">
+            <!-- Botón para abrir el panel de emojis -->
+            <button class="icon-btn" id="emojiBtn" title="Emojis">
+              <span class="material-icons">emoji_emotions</span>
+            </button>
+
+            <!-- Panel de emojis
                Se deja vacío y se llena dinámicamente con JavaScript -->
-          <div class="emoji-panel" id="emojiPanel"></div>
-        </div>
+            <div class="emoji-panel" id="emojiPanel"></div>
+          </div>
 
-        <!-- Stickers rápidos
+          <!-- Stickers rápidos
              (iconos que se envían como mensajes) -->
-        <div class="stickers">
-          <!-- Se generan desde JS -->
-        </div>
+          <div class="stickers">
+            <!-- Se generan desde JS -->
+          </div>
 
-        <!-- Input de texto del mensaje -->
-        <div class="msg-input-wrapper">
-          <input
-            id="message"
-            placeholder="Escribe un mensaje..."
-            disabled
-          />
-        </div>
+          <!-- Input de texto del mensaje -->
+          <div class="msg-input-wrapper">
+            <input id="message" placeholder="Escribe un mensaje..." disabled />
+          </div>
 
-        <!-- Botón enviar mensaje -->
-        <button
-          class="icon-btn send-btn"
-          id="send"
-          disabled
-          title="Enviar"
-        >
-          <span class="material-icons">send</span>
-        </button>
+          <!-- Botón enviar mensaje -->
+          <button class="icon-btn send-btn" id="send" disabled title="Enviar">
+            <span class="material-icons">send</span>
+          </button>
 
-        <!-- Botón de zumbido (estilo Messenger clásico) -->
-        <button class="icon-btn" id="buzzBtn" title="Zumbido">
-          <span class="material-icons">notifications_active</span>
-        </button>
+          <!-- Botón de zumbido (estilo Messenger clásico) -->
+          <button class="icon-btn" id="buzzBtn" title="Zumbido">
+            <span class="material-icons">notifications_active</span>
+          </button>
+        </footer>
+      </section>
+    </div>
 
-      </footer>
-    </section>
-  </div>
-
-  <!-- ======================
+    <!-- ======================
        SCRIPTS
        ====================== -->
 
-  <!-- Cliente oficial de SignalR -->
-  <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@latest/dist/browser/signalr.min.js"></script>
+    <!-- Cliente oficial de SignalR -->
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@latest/dist/browser/signalr.min.js"></script>
 
-  <!-- Configuración global -->
-  <script src="js/config.js"></script>
+    <!-- Configuración global -->
+    <script src="js/config.js"></script>
 
-  <!-- Estado global de la app (usuario, sala, conexión) -->
-  <script src="js/state.js"></script>
+    <!-- Estado global de la app (usuario, sala, conexión) -->
+    <script src="js/state.js"></script>
 
-  <!-- Utilidades comunes (formatos, sonidos, helpers) -->
-  <script src="js/utils.js"></script>
+    <!-- Utilidades comunes (formatos, sonidos, helpers) -->
+    <script src="js/utils.js"></script>
 
-  <!-- Manejo del DOM / UI -->
-  <script src="js/ui.js"></script>
+    <!-- Manejo del DOM / UI -->
+    <script src="js/ui.js"></script>
 
-  <!-- Tema claro / oscuro -->
-  <script src="js/theme.js"></script>
+    <!-- Tema claro / oscuro -->
+    <script src="js/theme.js"></script>
 
-  <!-- Lógica SignalR (conexión, eventos, mensajes) -->
-  <script src="js/signalr.js"></script>
+    <!-- Lógica SignalR (conexión, eventos, mensajes) -->
+    <script src="js/signalr.js"></script>
 
-</body>
+    <script src="js/responsive.js"></script>
+  </body>
 </html>
